@@ -100,16 +100,23 @@ function Student(firstName, subject) {
   this.subject = subject;
 };
 
-// Create a Student.prototype object that inherits from Person.prototype.
+// Create a Student.prototype(property) object that inherits from Person.prototype.
 // Note: A common error here is to use "new Person()" to create the
 // Student.prototype. That's incorrect for several reasons, not least 
 // that we don't have anything to give Person for the "firstName" 
 // argument. The correct place to call Person is above, where we call 
 // it from Student.
-Student.prototype = Object.create(Person.prototype); // See note below
-/*We want to associate all class Persons methods which are in prototype to Student so that during invocation of Student it will have access to walk() and sayHello methods in superclass Parent*/
+//https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/e-2685208748/m-2685198689
 
-// Set the "constructor" property to refer to Student
+Student.prototype = Object.create(Person.prototype); //Student.prototype object will delegate to Person for failed lookups(inheritance)
+
+// See note below
+//We want to associate all class Persons methods which are in prototype to Student so that during invocation of Student it will have access to walk() and sayHello methods in superclass Parent. Student will now delegate lookups to Person.prototype.constructor which is equal to Person object*/
+
+// Set the "constructor" property to refer to Student because the constructor property of Student got removed when we created our own Object above
+//https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/e-2785528542/m-2785688540
+https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/e-2789318536/m-2725948558
+
 Student.prototype.constructor = Student;
 
 // Replace the "sayHello" method
@@ -129,7 +136,7 @@ Student.prototype.getName = function(){
 };
 
 // Example usage:
-var student1 = new Student("Janet", "Applied Physics");
+var student1 = new Student("Janet", "Applied Physics"); //student1 will delegate to Student.prototype than Person.prototype for all lookups . https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/e-2711278553/m-2777598543
 student1.sayHello();   // "Hello, I'm Janet. I'm studying Applied Physics."
 student1.walk();       // "I am walking!"
 student1.sayGoodBye(); // "Goodbye!"
@@ -138,4 +145,72 @@ student1.getName(); // Added by Andrew to test prototype chaining. js will look 
 // Check that instanceof works correctly
 console.log(student1 instanceof Person);  // true 
 console.log(student1 instanceof Student); // true
+
+
+/**********************************************************************************/
+//Car constructor super class
+var Car = function(loc){
+    this.loc = loc;
+};
+
+//Add a move method using prototype chaining to Car class which has access to "this"
+//Any methods you want shared go on the .prototype property of the constructor function Car
+Car.prototype.move = function(){
+  this.loc++;  
+};
+// Your code goes here!
+
+//Bind Van to car using call method
+var Van = function(loc){
+	Car.call(this,loc); //Run Van subclass in same context as Car in order to access Car instance variables
+};
+
+Van.prototype = Object.create(Car.prototype);
+Van.prototype.constructor = Van; //we did this because the .prototype object was overwritten with create call above, so we need to set back the constructor property
+Van.prototype.grab = function(){};
+var zed = new Car(3);
+zed.move();
+
+// These lines have been commented out because Van hasn't been defined in this example
+
+var amy = new Van(9);
+amy.move();
+amy.grab();
+
+
+
+/**************************************************************************************/
+//Use of call from  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call
+function Product(name, price) {
+  this.name = name;
+  this.price = price;
+
+  if (price < 0) {
+    throw RangeError('Cannot create product ' +
+                      this.name + ' with a negative price');
+  }
+
+  return this;
+}
+
+function Food(name, price) {
+	//https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/e-2768198586/m-2783308539 - call video
+	//https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/m-2777058542 - call video
+  Product.call(this, name, price);
+  this.category = 'food';
+}
+
+//https://www.udacity.com/course/viewer#!/c-ud015/l-2794468541/m-2684408711 - Object.create video
+
+Food.prototype = Object.create(Product.prototype);
+
+function Toy(name, price) {
+  Product.call(this, name, price);
+  this.category = 'toy';
+}
+
+Toy.prototype = Object.create(Product.prototype);
+
+var cheese = new Food('feta', 5); 
+var fun = new Toy('robot', 40);
 
