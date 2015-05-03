@@ -14,7 +14,10 @@
  * a little simpler to work with.
  */
 
+//Pass in window object to auto executed Engine function using this which points to the window object by default
+
 var Engine = (function(global) {
+    console.log("in engine.js ....");
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -25,9 +28,10 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
-    doc.body.appendChild(canvas);
+        canvas.width = 505;
+        canvas.height = 606;
+        //Add the canvas element to the DOM
+        doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -39,8 +43,11 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
+        console.log("in main()");
+
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
+            //console.log("dt in main is: " + dt);
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
@@ -64,6 +71,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+        console.log("In init function ...");
         reset();
         lastTime = Date.now();
         main();
@@ -80,7 +88,8 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        //Call checkCollisions in app.js
+        checkCollisions(allEnemies, player,Resources);
     }
 
     /* This is called by the update function  and loops through all of the
@@ -91,6 +100,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        //console.log("dt in updateEntities is: " + dt);
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
@@ -148,6 +158,7 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+         //console.log(allEnemies[0]);
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -161,6 +172,8 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        console.log("In reset......");
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -172,13 +185,28 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Heart.png'
     ]);
+
+    console.log("Calling init ....");
     Resources.onReady(init);
 
+    Resources.canvas = canvas;
+    //Resources.sprite = 'images/char-boy.png';
+    //center();
+
+    function center() {
+        console.log("In center in engine.js");
+        console.log("Resources is: " + Resources.sprite);
+        player.centerPlayer(canvas,Resources);
+    }
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developer's can use it more easily
      * from within their app.js files.
      */
     global.ctx = ctx;
+
+     
+     //Pass in the window object(this) to the global parameter for Engine function
 })(this);

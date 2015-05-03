@@ -1,10 +1,11 @@
 /* Resources.js
- * This is simple an image loading utility. It eases the process of loading
+ * This is simply an image loading utility. It eases the process of loading
  * image files so that they can be used within your game. It also includes
  * a simple "caching" layer so it will reuse cached images if you attempt
  * to load the same image multiple times.
  */
 (function() {
+    console.log("In resources.js!");
     var resourceCache = {};
     var loading = [];
     var readyCallbacks = [];
@@ -19,9 +20,8 @@
              * loop through each value and call our image
              * loader on that image file
              */
-            urlOrArr.forEach(function(url) {
-                _load(url);
-            });
+            urlOrArr.forEach(function(url) { _load(url); });
+
         } else {
             /* The developer did not pass an array to this function,
              * assume the value is a string and call our image loader
@@ -29,11 +29,13 @@
              */
             _load(urlOrArr);
         }
-    }
+    } //end of function load(urlOrArr) {
 
-    /* This is our private image loader function, it is
+
+    /***************************************************************************
+     * This is our private image loader function, it is
      * called by the public image loader function.
-     */
+     ***************************************************************************/
     function _load(url) {
         if(resourceCache[url]) {
             /* If this URL has been previously loaded it will exist within
@@ -57,7 +59,13 @@
                  * call all of the onReady() callbacks we have defined.
                  */
                 if(isReady()) {
-                    readyCallbacks.forEach(function(func) { func(); });
+                    //console.log("In isReady");
+                  
+                    readyCallbacks.forEach(function(func) 
+                    {
+                      console.log("func is: "+ eval(func));
+                      func(); 
+                    });
                 }
             };
 
@@ -68,13 +76,14 @@
             resourceCache[url] = false;
             img.src = url;
         }
-    }
+    }// end of function _load(url) {
 
     /* This is used by developer's to grab references to images they know
      * have been previously loaded. If an image is cached, this functions
      * the same as calling load() on that URL.
      */
     function get(url) {
+        //console.log("calling get with parameter: " + url);
         return resourceCache[url];
     }
 
@@ -84,11 +93,13 @@
     function isReady() {
         var ready = true;
         for(var k in resourceCache) {
+            //console.log(" in isReady and k is :" + k);
             if(resourceCache.hasOwnProperty(k) &&
                !resourceCache[k]) {
                 ready = false;
             }
         }
+        //console.log("ready is: "+ ready);
         return ready;
     }
 
@@ -100,7 +111,7 @@
     }
 
     /* This object defines the publicly accessible functions available to
-     * developers by creating a global Resources object.
+     * developers by creating a global Resources object. 
      */
     window.Resources = {
         load: load,
