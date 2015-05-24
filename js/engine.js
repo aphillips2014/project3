@@ -14,7 +14,7 @@
  * a little simpler to work with.
  */
 
-//Pass in window object to auto executed Engine function using this which points to the window object by default
+  //Pass in window object to auto executed Engine function using this which points to the window object by default
 
 var Engine = (function(global) {
     console.log("in engine.js ....");
@@ -43,7 +43,7 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
-        console.log("in main()");
+        //console.log("in main()");
 
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
@@ -64,7 +64,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -75,7 +75,7 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         main();
-    }
+    }//end of init()
 
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
@@ -88,9 +88,10 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        //Call checkCollisions in app.js
+        //Call checkCollisions in app.js as it is a global function
         checkCollisions(allEnemies, player,Resources);
-    }
+    }// end of update(dt)
+
 
     /* This is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -105,7 +106,8 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-    }
+    }//end of updateEntities(dt)
+
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -148,7 +150,8 @@ var Engine = (function(global) {
 
 
         renderEntities();
-    }
+    }// end of render()
+
 
     /* This function is called by the render function and is called on each game
      * tick. It's purpose is to then call the render functions you have defined
@@ -164,17 +167,19 @@ var Engine = (function(global) {
         });
 
         player.render();
-    }
+    }//end of renderEntities()
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
+     * Added by Andrew: reset() is a private function only available in Engine. Notice not prototypes
+     * are defined to indicate an sharing of this method
      */
     function reset() {
         // noop
         console.log("In reset......");
 
-    }
+    }//end of reset()
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -184,23 +189,16 @@ var Engine = (function(global) {
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
-        'images/enemy-bug.png',
-        'images/char-boy.png',
-        'images/Heart.png'
+        'images/enemy-bug2.png',
+        'images/char-boy2.png',
+        'images/Heart.png',
+        'images/game-over.png'
     ]);
 
     console.log("Calling init ....");
     Resources.onReady(init);
-
     Resources.canvas = canvas;
-    //Resources.sprite = 'images/char-boy.png';
-    //center();
 
-    function center() {
-        console.log("In center in engine.js");
-        console.log("Resources is: " + Resources.sprite);
-        player.centerPlayer(canvas,Resources);
-    }
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developer's can use it more easily
      * from within their app.js files.
