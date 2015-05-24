@@ -5,7 +5,7 @@
  * to load the same image multiple times.
  */
 (function() {
-    console.log("In resources.js!");
+    //console.log("In resources.js!");
     var resourceCache = {};
     var loading = [];
     var readyCallbacks = [];
@@ -63,7 +63,7 @@
                   
                     readyCallbacks.forEach(function(func) 
                     {
-                      console.log("func is: "+ eval(func));
+                      //console.log("func is: "+ eval(func));
                       func(); 
                     });
                 }
@@ -93,7 +93,7 @@
     function isReady() {
         var ready = true;
         for(var k in resourceCache) {
-            //console.log(" in isReady and k is :" + k);
+            //console.log(" in isReady and k is :" + resourceCache.hasOwnProperty(k));
             if(resourceCache.hasOwnProperty(k) &&
                !resourceCache[k]) {
                 ready = false;
