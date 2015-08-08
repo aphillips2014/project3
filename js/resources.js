@@ -5,22 +5,28 @@
  * to load the same image multiple times.
  */
 (function() {
-    //console.log("In resources.js!");
+    console.log("In resources.js!");
     var resourceCache = {};
     var loading = [];
     var readyCallbacks = [];
 
-    /* This is the publicly accessible image loading function. It accepts
+    /****************************************************************************
+     * This is the publicly accessible image loading function. It accepts
      * an array of strings pointing to image files or a string for a single
      * image. It will then call our private image loading function accordingly.
-     */
+     ***************************************************************************/
     function load(urlOrArr) {
         if(urlOrArr instanceof Array) {
             /* If the developer passed in an array of images
              * loop through each value and call our image
              * loader on that image file
              */
-            urlOrArr.forEach(function(url) { _load(url); });
+            //console.log("First index is : " + urlOrArr[0]);
+            //For each element in array call the callback function(url) and call _laod function
+            urlOrArr.forEach(function(url) {
+                             _load(url);
+                             //console.log("url value is : " + url);
+                             });
 
         } else {
             /* The developer did not pass an array to this function,
@@ -34,9 +40,10 @@
 
     /***************************************************************************
      * This is our private image loader function, it is
-     * called by the public image loader function.
+     * called by the public image load(urlOrArr) function.
      ***************************************************************************/
     function _load(url) {
+        console.log("in _load ");
         if(resourceCache[url]) {
             /* If this URL has been previously loaded it will exist within
              * our resourceCache array. Just return that image rather
@@ -55,16 +62,17 @@
                  */
                 resourceCache[url] = img;
 
+                //console.log("resourceCache["+url+"] is :" + img);
                 /* Once the image is actually loaded and properly cached,
                  * call all of the onReady() callbacks we have defined.
                  */
                 if(isReady()) {
-                    //console.log("In isReady");
-                  
-                    readyCallbacks.forEach(function(func) 
+                    console.log("In isReady");
+
+                    readyCallbacks.forEach(function(func)
                     {
-                      //console.log("func is: "+ eval(func));
-                      func(); 
+                      console.log("func is: "+ eval(func));
+                      func();
                     });
                 }
             };
@@ -78,10 +86,11 @@
         }
     }// end of function _load(url) {
 
-    /* This is used by developer's to grab references to images they know
+    /***********************************************************************
+     * This is used by developer's to grab references to images they know
      * have been previously loaded. If an image is cached, this functions
      * the same as calling load() on that URL.
-     */
+     **********************************************************************/
     function get(url) {
         //console.log("calling get with parameter: " + url);
         return resourceCache[url];
@@ -93,9 +102,9 @@
     function isReady() {
         var ready = true;
         for(var k in resourceCache) {
+            //console.log("value k is: " + k);
             //console.log(" in isReady and k is :" + resourceCache.hasOwnProperty(k));
-            if(resourceCache.hasOwnProperty(k) &&
-               !resourceCache[k]) {
+            if(resourceCache.hasOwnProperty(k) && !resourceCache[k]) {
                 ready = false;
             }
         }
@@ -111,12 +120,15 @@
     }
 
     /* This object defines the publicly accessible functions available to
-     * developers by creating a global Resources object. 
+     * developers by creating a global Resources object.
+     * Add a property called Resources to global window object to be use in
+     * engine.js
      */
+     console.log("window.Resources is creating.");
     window.Resources = {
         load: load,
         get: get,
         onReady: onReady,
         isReady: isReady
     };
-})();
+}());

@@ -12,6 +12,9 @@
  * This engine is available globally via the Engine variable and it also makes
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
+ *
+ * Engine is a IFFE(Immediately Invoked Function Expression) and is called immediately
+ * upon loading as the interpreter comes across it
  */
 
   //Pass in window object to auto executed Engine function using this which points to the window object by default
@@ -172,12 +175,12 @@ var Engine = (function(global) {
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
-     * Added by Andrew: reset() is a private function only available in Engine. Notice not prototypes
+     * Added by Andrew: reset() is a private function only available in Engine. Notice no prototypes
      * are defined to indicate an sharing of this method
      */
     function reset() {
         // noop
-        console.log("In reset......");
+        console.log("In Engine reset......");
 
     }//end of reset()
 
@@ -185,6 +188,7 @@ var Engine = (function(global) {
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
+    console.log("Calling Resources.load in engine.js.");
     Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
@@ -196,7 +200,7 @@ var Engine = (function(global) {
     ]);
 
     console.log("Calling init ....");
-    Resources.onReady(init);
+    Resources.onReady(init); //push init function onto callback stack
     Resources.canvas = canvas;
 
     /* Assign the canvas' context object to the global variable (the window
@@ -205,6 +209,6 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 
-     
-     //Pass in the window object(this) to the global parameter for Engine function
+
+     //Pass in the window object(this) to the global parameter to the global Engine function
 })(this);

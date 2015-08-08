@@ -1,11 +1,14 @@
+console.log("In app.js.");
+//console.log(Engine.reset());
 /*************************************************************
- Class: Enemy
- Parameters: sprite, x location, y location, horizontal speed
- Description: Enemy class constructor that initializes our Enemy
-              that players must avoid
+  Class: Enemy
+  Parameters: sprite, x location, y location, horizontal speed
+  Description: Enemy class constructor that initializes our Enemy
+               that players must avoid
 **************************************************************/
 
 var Enemy = function(sprite,x,y,speed) {
+      //Member Data
       this.x = x;
       this.y = y;
       this.sprite = sprite;
@@ -14,7 +17,7 @@ var Enemy = function(sprite,x,y,speed) {
 };
 
 /***********************************************************************
-  Method: update
+  Method: Enemy.update
   Description: Update the enemy's position, required method for game
   Parameter: dt, a time delta between ticks
   Called by: updateEntities function in engine.js script
@@ -36,7 +39,7 @@ Enemy.prototype.update = function(dt) {
 };
 
 /***********************************************************************
-  Method: render
+  Method: Enemy.render
   Description: Draw the Enemy on the screen. Required method for game
   Parameter: none
   Called by: renderEntities function in engine.js script
@@ -48,10 +51,10 @@ Enemy.prototype.render = function() {
 };
 
 /***********************************************************************
-  Method: getRand
+  Method: Enemy.getRand
   Description: Create a random number
   Parameter: seed value
-  Called by: enemy object
+  Called by: enemy objec   t
 ************************************************************************/
 
 Enemy.prototype.getRand = function(rnd){
@@ -61,18 +64,19 @@ Enemy.prototype.getRand = function(rnd){
 };
 
 /*************************************************************
- Class: Player
- Parameters: none
- Description: Player class constructor that initializes our
-              player .This class requires an update(), render()
-              and a handleInput() method.
- Called by: app.js
+  Class: Player
+  Parameters: none
+  Description: Player class constructor that initializes our
+                player .This class requires an update(), render()
+                and a handleInput() method.
+  Called by: app.js
 **************************************************************/
 
 var Player = function() {
-      //console.log("In Player constructor");
+      console.log("In Player constructor");
       //this = Object.create(Player.prototype);
 
+      //Member data
       this.sprite = 'images/char-boy2.png';
       this.x = 430/2 - 10; //position player sprite horizontally
       this.y = 606 - Math.ceil((85 + (85/2))); //position player sprite vertically
@@ -84,22 +88,22 @@ var Player = function() {
 };
 
 /***********************************************************************
-    Method: update
-    Description: Update the player's position, required method for game
-    Parameter: dt(delta tick) a time delta between ticks
-    Called by: updateEntities function in engine.js script
+  Method: Player.update
+  Description: Update the player's position, required method for game
+  Parameter: dt(delta tick) a time delta between ticks
+  Called by: updateEntities function in engine.js script
 ************************************************************************/
 
 Player.prototype.update = function(dt) {
       // You should multiply any movement by the dt parameter
       // which will ensure the game runs at the same speed for
       // all computers.
-
+      //console.log("In Player.prototype.update method.");
       //X Position
       var playerXpositionEndPointRight = Resources.canvas.width - Resources.get(this.sprite).width;
 
       //Y Position
-      var height = Resources.get(this.sprite).height;
+      var height = Resources.get(this.sprite).height; //get the sprite name for this player and get height. Looks in resourceCache
       var playerYpositionEndPointBottom = Resources.canvas.height - Math.ceil((height + (height/2)));
 
       //To keep the player from moving of the right side of screen subtract the width of image from the width of canvas
@@ -127,10 +131,10 @@ Player.prototype.update = function(dt) {
 };
 
 /***********************************************************************
-    Method: render
-    Description: Draw the Player on the screen. Required method for game
-    Parameter: none
-    Called by: renderEntities function in engine.js script
+  Method: Player.render
+  Description: Draw the Player on the screen. Required method for game
+  Parameter: none
+  Called by: renderEntities function in engine.js script
 ************************************************************************/
 
 Player.prototype.render = function() {
@@ -140,10 +144,10 @@ Player.prototype.render = function() {
 };
 
 /***********************************************************************
-    Method: handleInput
-    Description:Handle player keyboard Inputs
-    Parameter: keyCode
-    Called by: addEventListener function in app.js script
+  Method: Player.handleInput
+  Description:Handle player keyboard Inputs
+  Parameter: keyCode
+  Called by: addEventListener function in app.js script
 ************************************************************************/
 
 Player.prototype.handleInput = function(keyCode) {
@@ -182,12 +186,31 @@ Player.prototype.handleInput = function(keyCode) {
       }
 };
 
+/***********************************************************************
+  Method: Player.reset
+  Description:  If player reaches water and tries to get back to grass and collides
+                  reset the player to water else position him back to grass starting
+                  point. The default x position of player never changes
+  Parameter: None
+  Called by: checkCollision function when player collides with enemy
+************************************************************************/
+
+//function reset(){
+ Player.prototype.reset = function(){
+      //console.log("Player.WATER in reset is: " + Player.WATER);
+      if (Player.WATER === true){
+          player.y = 52; //position player in water
+      } else {
+          player.y = 480;//position player in grass
+      }
+      player.x = 430/2 - 10;
+};
 
 /***********************************************************************
-    Method: checkCollisions
-    Description:Handle collisions between player and enemy
-    Parameter: enemy obj, player obj and res object
-    Called by: update function in engine.js script
+  Function: checkCollisions
+  Description:Handle collisions between player and enemy
+  Parameter: enemy obj, player obj and res object
+  Called by: update function in engine.js script
 ************************************************************************/
 
 function checkCollisions(enemyCol, playerCol, res){
@@ -213,7 +236,7 @@ function checkCollisions(enemyCol, playerCol, res){
       var coll4;
       var collisionResult;
 
-      //Loop through enemy array and calculate
+      //Loop through array of Enemy objects and calculate
       //collision for each enemy against the player
       for (var i = 0; i < enemyLength; i++){
           enemy = enemyCol[i];
@@ -235,7 +258,7 @@ function checkCollisions(enemyCol, playerCol, res){
           collisionResult = !(coll1 || coll2 || coll3 || coll4);
 
           if (collisionResult){
-              reset();
+              player.reset();
           }
       }
 
@@ -258,24 +281,6 @@ function checkCollisions(enemyCol, playerCol, res){
       }
 }
 
-/***********************************************************************
-    Method: reset
-    Description:  If player reaches water and tries to get back to grass and collides
-                  reset the player to water else position him back to grass starting
-                  point. The default x position of player never changes
-    Parameter: None
-    Called by: checkCollision function when player collides with enemy
-************************************************************************/
-
-function reset(){
-      //console.log("Player.WATER in reset is: " + Player.WATER);
-      if (Player.WATER === true){
-          player.y = 52; //position player in water
-      } else {
-          player.y = 480;//position player in grass
-      }
-      player.x = 430/2 - 10;
-}
 
 
 //Sleep script http://www.phpied.com/sleep-in-javascript/
@@ -289,21 +294,19 @@ function sleep(milliseconds) {
       }
 }
 
-
-// Instantiate 4 enemy objects.
-// Place all enemy objects in an array called allEnemies
+// Instantiate global player object accessible via window object
+// Instantiate 4 global enemy objects accessible via window object
+// Place all enemy objects in an global array called allEnemies accessible via window object
 // Place the player object in a variable called player
 
 var player = new Player();
 var enemy1  = new Enemy('images/enemy-bug2.png',1,140,Enemy.prototype.getRand(15));
 var enemy2 = new Enemy('images/enemy-bug2.png',1,220,Enemy.prototype.getRand(20));
 var enemy3 = new Enemy('images/enemy-bug2.png',1,300,Enemy.prototype.getRand(25));
-var enemy4 = new Enemy('images/enemy-bug2.png',1,380,Enemy.prototype.getRand(30));
-var allEnemies = [enemy1,enemy2,enemy3,enemy4];
+var allEnemies = [enemy1,enemy2,enemy3];
 
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// This listens for key presses on the web page and sends the keys to your
 document.addEventListener('keyup', function(e) {
       var allowedKeys = {
         37: 'left',
@@ -314,22 +317,3 @@ document.addEventListener('keyup', function(e) {
 
       player.handleInput(allowedKeys[e.keyCode]);
 });
-
-/* TODO
-The next few lines about clicks are for the Collecting Click Locations quiz in Lesson 2.
-*/
-/*clickLocations = [];
-
-function logClicks(x,y) {
-  clickLocations.push(
-    {
-      x: x,
-      y: y
-    }
-  );
-  console.log('x location: ' + x + '; y location: ' + y);
-}
-
-$(document).click(function(loc) {
-  logClicks(loc.pageX, loc.pageY);
-});*/
