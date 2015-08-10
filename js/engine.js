@@ -190,8 +190,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug2.png',
-        'images/char-boy2.png',
-        'images/game-over.png'
+        'images/char-boy2.png'
+
     ]);
 
     Resources.onReady(init); //push init function onto callback stack
