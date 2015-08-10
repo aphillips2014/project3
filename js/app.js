@@ -1,5 +1,4 @@
-console.log("In app.js.");
-//console.log(Engine.reset());
+
 /*************************************************************
   Class: Enemy
   Parameters: sprite, x location, y location, horizontal speed
@@ -7,13 +6,14 @@ console.log("In app.js.");
                that players must avoid
 **************************************************************/
 
-var Enemy = function(sprite,x,y,speed) {
+var Enemy = function(sprite,x,y,speed,bugName) {
       //Member Data
       this.x = x;
       this.y = y;
       this.sprite = sprite;
       this.speed = speed;
-      this.offscreenLeftPosStart = -100;
+      this.offscreenLeftPosStart = -175;
+      this.bugName = bugName
 };
 
 /***********************************************************************
@@ -46,7 +46,6 @@ Enemy.prototype.update = function(dt) {
 ************************************************************************/
 
 Enemy.prototype.render = function() {
-      //console.log("******************** in Enemy.render *****************");
       ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -58,9 +57,8 @@ Enemy.prototype.render = function() {
 ************************************************************************/
 
 Enemy.prototype.getRand = function(rnd){
-      var randomnumber = ((Math.random() + 10) * rnd);
-      var randomnumber2 = Math.ceil(randomnumber);
-      return randomnumber2;
+      var randomnumberSt = ((Math.random() + 20) + (Math.random() + 10)) * rnd/2.5;
+      return randomnumberSt;
 };
 
 /*************************************************************
@@ -79,9 +77,8 @@ var Player = function() {
       //Member data
       this.sprite = 'images/char-boy2.png';
       this.x = 430/2 - 10; //position player sprite horizontally
-      this.y = 606 - Math.ceil((85 + (85/2))); //position player sprite vertically
-      this.boundBoxVar = 52;
-
+      this.y = 606; //position player sprite vertically
+      this.endImage = 'images/game-over.png';
       //  TODO: this.gameOver = 'images/game-over.png';
       //  TODO: this.playerHeight = Resources.get(this.sprite).height;
 
@@ -98,13 +95,16 @@ Player.prototype.update = function(dt) {
       // You should multiply any movement by the dt parameter
       // which will ensure the game runs at the same speed for
       // all computers.
-      //console.log("In Player.prototype.update method.");
+
+      //msgStat = window.document.getElementById('msg');
+      //msgStat.textContent = this.y;
+
       //X Position
       var playerXpositionEndPointRight = Resources.canvas.width - Resources.get(this.sprite).width;
 
       //Y Position
       var height = Resources.get(this.sprite).height; //get the sprite name for this player and get height. Looks in resourceCache
-      var playerYpositionEndPointBottom = Resources.canvas.height - Math.ceil((height + (height/2)));
+      var playerYpositionEndPointBottom = Resources.canvas.height - Math.ceil((height + (height/1.5)));
 
       //To keep the player from moving of the right side of screen subtract the width of image from the width of canvas
       //which will set the end point on right side
@@ -114,20 +114,16 @@ Player.prototype.update = function(dt) {
           this.x = playerXpositionEndPointRight;
       }
 
-      if (this.x < 0.5){
-          this.x = 0.5;
-      }
-
       if (this.y > playerYpositionEndPointBottom){
           this.y = playerYpositionEndPointBottom;
       }
 
-      //52px places the position of the player just above the bounding box of the enemy
-      //once the player reaches the water this prevents contact due to space limits of
-      //bounding box and position of enemy
-      if (this.y < this.boundBoxVar){
-          this.y = 51;
+      if ((this.y < 52) || (this.y === 52)) {
+          score += 10;
+          player.reset("Congratulations you made it to the WATER!!");
       }
+
+
 };
 
 /***********************************************************************
@@ -141,6 +137,7 @@ Player.prototype.render = function() {
       //console.log("X location of player is: " + this.x);
       //console.log("Y location of player is: " + this.y);
       ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
 };
 
 /***********************************************************************
@@ -154,15 +151,19 @@ Player.prototype.handleInput = function(keyCode) {
 
       var spriteHeight = Resources.get(this.sprite).height;
       var spriteWidth = Resources.get(this.sprite).width;
-      var step = 2; //the amount of movement up or down
 
-      //Divide the spriteHeight by step to give player smaller movements vertically
       if (keyCode === 'up'){
-          this.y -= spriteHeight/step;
+          this.y -= spriteHeight;
+          //msgStat = window.document.getElementById('msg');
+          //msgStat.textContent = this.y;
+          msgStat = window.document.getElementById('status');
+          msgStat.textContent = "";
       }
 
       if (keyCode === 'down'){
-          this.y += spriteHeight/step;
+          this.y += spriteHeight;
+          //msgStat = window.document.getElementById('msg');
+          //msgStat.textContent = this.y;
       }
 
       if (keyCode === 'left'){
@@ -173,17 +174,15 @@ Player.prototype.handleInput = function(keyCode) {
           this.x += spriteWidth;
       }
 
-      //If player hits the water set to true to put player in start position
-      //in the water if player collides with a enemy on the way back to grass
-      if (this.y <= this.boundBoxVar){
-          Player.WATER = true;
+      //TODO: Incorporate space bar to un pause game
+      /*
+      if (keyCode === 'spacebar'){
+          var now = Date.now();
+          dt = (now - lastTime) / 1000.0;
+          update(dt);
       }
+      */
 
-      //If player hasn't hit the water set to false to put player in start position
-      //in the in grass until the player hits the water
-      if (this.y >= 480){
-          Player.WATER = false;
-      }
 };
 
 /***********************************************************************
@@ -195,15 +194,22 @@ Player.prototype.handleInput = function(keyCode) {
   Called by: checkCollision function when player collides with enemy
 ************************************************************************/
 
-//function reset(){
- Player.prototype.reset = function(){
-      //console.log("Player.WATER in reset is: " + Player.WATER);
-      if (Player.WATER === true){
-          player.y = 52; //position player in water
-      } else {
-          player.y = 480;//position player in grass
-      }
+ Player.prototype.reset = function(message){
+
+      //position player in grass and center player
+      player.y = 480;//position player in grass
       player.x = 430/2 - 10;
+      enemy1.x = -280;
+      enemy2.x = -280;
+      enemy3.x = -280;
+
+      msgStat = window.document.getElementById('status');
+      msgStat.textContent = message;
+      msgScore = window.document.getElementById('score');
+      msgScore.textContent = score;
+      //ctx.drawImage(Resources.get(this.endImage),0,0);
+
+
 };
 
 /***********************************************************************
@@ -213,7 +219,7 @@ Player.prototype.handleInput = function(keyCode) {
   Called by: update function in engine.js script
 ************************************************************************/
 
-function checkCollisions(enemyCol, playerCol, res){
+function checkCollisions(enemyCol, playerCol, res, doc){
       //console.log("in checkCollisions");
       //Enemy = a
       //Player  = b
@@ -247,10 +253,10 @@ function checkCollisions(enemyCol, playerCol, res){
 
           //Collision algorithm provide by
           //http://stackoverflow.com/questions/2440377/javascript-collision-detection
-          coll1 = (enemy.y + enemyHeight) < player.y;
-          coll2 = enemy.y > (player.y + playerHeight);
-          coll3 = (enemy.x + enemyWidth) < player.x;
-          coll4 = enemy.x > (player.x + playerWidth);
+          coll1 = (enemy.y + enemyHeight/3) < player.y;
+          coll2 = enemy.y > (player.y + playerHeight/3);
+          coll3 = (enemy.x + enemyWidth/3) < player.x;
+          coll4 = enemy.x > (player.x + playerWidth/3);
 
           //Short circuit on true value to signal no collision
           //If no short circuit than there is a collison on one of the enemies
@@ -258,26 +264,12 @@ function checkCollisions(enemyCol, playerCol, res){
           collisionResult = !(coll1 || coll2 || coll3 || coll4);
 
           if (collisionResult){
-              player.reset();
+              score -= 5;
+              player.reset("CRASH!!! You have collided with " + enemy.bugName + " the bug!");
+              doc.createElement('div');
+              //ctx.drawImage(Resources.get(this.endImage),0,0);
+
           }
-      }
-
-      //Debugger info
-      if (false){
-          sleep(1200);
-          console.log("coll1 is : " + coll1);
-          console.log("coll2 is : " + coll2);
-          console.log("coll3 is : " + coll3);
-          console.log("coll4 is : " + coll4);
-
-          console.log("Enemy x location is: " + enemy.x);
-          console.log("Enemy y location is: " + enemy.y);
-          console.log("Enemy height is: " + enemyHeight);
-          console.log("Enemy width is: " + enemyWidth);
-          console.log("Player height is: " + playerHeight);
-          console.log("Player width is: " + playerWidth);
-          console.log("Player x location is: " + player.x);
-          console.log("Player y location is: " + player.y);
       }
 }
 
@@ -298,22 +290,27 @@ function sleep(milliseconds) {
 // Instantiate 4 global enemy objects accessible via window object
 // Place all enemy objects in an global array called allEnemies accessible via window object
 // Place the player object in a variable called player
-
-var player = new Player();
-var enemy1  = new Enemy('images/enemy-bug2.png',1,140,Enemy.prototype.getRand(15));
-var enemy2 = new Enemy('images/enemy-bug2.png',1,220,Enemy.prototype.getRand(20));
-var enemy3 = new Enemy('images/enemy-bug2.png',1,300,Enemy.prototype.getRand(25));
-var allEnemies = [enemy1,enemy2,enemy3];
+      var msgStat;
+      var msgScore;
+      var score = 0;
+      var player = new Player();
+      var enemy1  = new Enemy('images/enemy-bug2.png',1,120,Enemy.prototype.getRand(15)*1.3, "Larry");
+      var enemy2 = new Enemy('images/enemy-bug2.png',1,225,Enemy.prototype.getRand(20)*1.5, "Moe");
+      var enemy3 = new Enemy('images/enemy-bug2.png',1,320,Enemy.prototype.getRand(25)*2, "Curly");
+      //var enemy4 = new Enemy('images/enemy-bug2.png',1,275,Enemy.prototype.getRand(35));
+      var allEnemies = [enemy1,enemy2,enemy3];
 
 
 // This listens for key presses on the web page and sends the keys to your
 document.addEventListener('keyup', function(e) {
       var allowedKeys = {
+        32: 'spacebar',
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
       };
 
-      player.handleInput(allowedKeys[e.keyCode]);
+player.handleInput(allowedKeys[e.keyCode]);
+
 });
