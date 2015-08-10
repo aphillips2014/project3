@@ -13,7 +13,7 @@ var Enemy = function(sprite,x,y,speed,bugName) {
       this.sprite = sprite;
       this.speed = speed;
       this.offscreenLeftPosStart = -175;
-      this.bugName = bugName
+      this.bugName = bugName;
 };
 
 /***********************************************************************
