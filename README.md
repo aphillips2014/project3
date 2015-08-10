@@ -1,18 +1,18 @@
-frontend-nanodegree-arcade-game
+Frogger Game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+This game is a low end version of the frogger game. The object of the game is to move the boy character to
+the water without hitting the pesky bugs.
 
-for self-checking their submission.
+## How do I play the game?
 
-
-
-## How do I complete this project?
-
-1. Go to the [Javascript Basics course](https://www.udacity.com/course/ud804) and select "View Course Materials."
-2. Go through the videos and assignments in this course to learn the JavaScript necessary to build your resume.
-3. Review your work against the Project Rubric (on the next page).
-4. When you are satisfied with your project, submit it according to the Submission Instructions on the next page.
+1. Download all the files for this project.
+2. Open the index.html file.
+3. You use up key to move up, the left arrow key to move left, the right arrow key to move right and the 
+   down arrow to move the player down.
+4. If you make it to the water the game will reset and you will see a message stating that you made it to the water.
+5. Once you make it to the water you will be awarded 10 points.
+6. If you collide with a bug 5 points will be deducted from your score.
 
 ### By the end:
 Your resume will look something like this
