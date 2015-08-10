@@ -1,4 +1,4 @@
-Frogger Game
+Bugger Game
 ===============================
 
 This game is a low end version of the frogger game. The object of the game is to move the boy character to
