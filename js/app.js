@@ -218,7 +218,7 @@ Player.prototype.reset = function(message){
 ************************************************************************/
 
 function checkCollisions(enemyCol, playerCol, res, doc){
-      //console.log("in checkCollisions");
+
       //Enemy = a
       //Player  = b
 
