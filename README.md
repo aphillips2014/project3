@@ -18,10 +18,14 @@ the water without hitting the pesky bugs.
 
 ![](https://github.com/aphillips2014/project3/blob/master/images/gameimage.PNG)
 
-And your repository will include the following files:
+Below are the game artifacts
 
 * **index.html**: The main HTML document. Contains links to all of the CSS and JS resources needed to render the game.
 * **js/app.js**: Contains application code needed to instantiate the player and enemy objects. Also manages movement and collsions.
 * **js/engine.js**: The main game engine where main() loop is done.
 * **js/resources.js**: Manages loading the image resources, loading and caching the images.
 * **README.md**: Game info.
+* **css/styles.css**: Contains css to center the body.
+* **images**: enemy-bug2.png, char-boy2.png,water-block.png,stone-block.png,grass-block.png
+
+## Enjoy the game!!!!!
