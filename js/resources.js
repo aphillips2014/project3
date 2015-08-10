@@ -108,7 +108,6 @@
                 ready = false;
             }
         }
-        //console.log("ready is: "+ ready);
         return ready;
     }
 
