@@ -71,17 +71,12 @@ Enemy.prototype.getRand = function(rnd){
 **************************************************************/
 
 var Player = function() {
-      console.log("In Player constructor");
       //this = Object.create(Player.prototype);
-
       //Member data
       this.sprite = 'images/char-boy2.png';
       this.x = 430/2 - 10; //position player sprite horizontally
       this.y = 606; //position player sprite vertically
       this.endImage = 'images/game-over.png';
-      //  TODO: this.gameOver = 'images/game-over.png';
-      //  TODO: this.playerHeight = Resources.get(this.sprite).height;
-
 };
 
 /***********************************************************************
@@ -97,11 +92,11 @@ Player.prototype.update = function(dt) {
       // all computers.
 
       //msgStat = window.document.getElementById('msg');
-      //msgStat.textContent = this.y;
+      //msgStat.textContent = this.x;
 
       //X Position
       var playerXpositionEndPointRight = Resources.canvas.width - Resources.get(this.sprite).width;
-
+      var playerXpositionEndPointLeft = 0;
       //Y Position
       var height = Resources.get(this.sprite).height; //get the sprite name for this player and get height. Looks in resourceCache
       var playerYpositionEndPointBottom = Resources.canvas.height - Math.ceil((height + (height/1.5)));
@@ -116,6 +111,10 @@ Player.prototype.update = function(dt) {
 
       if (this.y > playerYpositionEndPointBottom){
           this.y = playerYpositionEndPointBottom;
+      }
+
+      if (this.x < playerXpositionEndPointLeft){
+          this.x = playerXpositionEndPointLeft;
       }
 
       if ((this.y < 52) || (this.y === 52)) {
@@ -134,10 +133,7 @@ Player.prototype.update = function(dt) {
 ************************************************************************/
 
 Player.prototype.render = function() {
-      //console.log("X location of player is: " + this.x);
-      //console.log("Y location of player is: " + this.y);
       ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-
 };
 
 /***********************************************************************
@@ -156,8 +152,6 @@ Player.prototype.handleInput = function(keyCode) {
           this.y -= spriteHeight;
           //msgStat = window.document.getElementById('msg');
           //msgStat.textContent = this.y;
-          msgStat = window.document.getElementById('status');
-          msgStat.textContent = "";
       }
 
       if (keyCode === 'down'){
@@ -168,10 +162,14 @@ Player.prototype.handleInput = function(keyCode) {
 
       if (keyCode === 'left'){
           this.x -= spriteWidth;
+          //msgStat = window.document.getElementById('msg');
+          //msgStat.textContent = this.x;
       }
 
       if (keyCode === 'right'){
           this.x += spriteWidth;
+          //msgStat = window.document.getElementById('msg');
+          //msgStat.textContent = this.x;
       }
 
       //TODO: Incorporate space bar to un pause game
@@ -194,7 +192,7 @@ Player.prototype.handleInput = function(keyCode) {
   Called by: checkCollision function when player collides with enemy
 ************************************************************************/
 
- Player.prototype.reset = function(message){
+Player.prototype.reset = function(message){
 
       //position player in grass and center player
       player.y = 480;//position player in grass
@@ -266,7 +264,7 @@ function checkCollisions(enemyCol, playerCol, res, doc){
           if (collisionResult){
               score -= 5;
               player.reset("CRASH!!! You have collided with " + enemy.bugName + " the bug!");
-              doc.createElement('div');
+              //doc.createElement('div');
               //ctx.drawImage(Resources.get(this.endImage),0,0);
 
           }
@@ -275,7 +273,10 @@ function checkCollisions(enemyCol, playerCol, res, doc){
 
 
 
-//Sleep script http://www.phpied.com/sleep-in-javascript/
+/*****************************************************************************
+ Sleep script http://www.phpied.com/sleep-in-javascript/
+******************************************************************************/
+
 function sleep(milliseconds) {
       var start = new Date().getTime();
 
@@ -290,19 +291,17 @@ function sleep(milliseconds) {
 // Instantiate 4 global enemy objects accessible via window object
 // Place all enemy objects in an global array called allEnemies accessible via window object
 // Place the player object in a variable called player
-      var msgStat;
-      var msgScore;
+      var msgStat, msgScore
       var score = 0;
       var player = new Player();
       var enemy1  = new Enemy('images/enemy-bug2.png',1,120,Enemy.prototype.getRand(15)*1.3, "Larry");
       var enemy2 = new Enemy('images/enemy-bug2.png',1,225,Enemy.prototype.getRand(20)*1.5, "Moe");
       var enemy3 = new Enemy('images/enemy-bug2.png',1,320,Enemy.prototype.getRand(25)*2, "Curly");
-      //var enemy4 = new Enemy('images/enemy-bug2.png',1,275,Enemy.prototype.getRand(35));
       var allEnemies = [enemy1,enemy2,enemy3];
 
 
 // This listens for key presses on the web page and sends the keys to your
-document.addEventListener('keyup', function(e) {
+      document.addEventListener('keyup', function(e) {
       var allowedKeys = {
         32: 'spacebar',
         37: 'left',
@@ -311,6 +310,6 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
       };
 
-player.handleInput(allowedKeys[e.keyCode]);
+      player.handleInput(allowedKeys[e.keyCode]);
 
 });

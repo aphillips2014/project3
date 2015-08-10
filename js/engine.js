@@ -20,7 +20,6 @@
   //Pass in window object to auto executed Engine function using this which points to the window object by default
 
 var Engine = (function(global) {
-    console.log("in engine.js ....");
     /* Predefine the local variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -30,7 +29,6 @@ var Engine = (function(global) {
          canvas = doc.createElement('canvas'),
          ctx = canvas.getContext('2d'),
          lastTime;
-
          canvas.width = 505;
          canvas.height = 606;
          //Add the canvas element to the DOM
@@ -47,7 +45,6 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
-        //console.log("in main()");
 
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
@@ -74,7 +71,6 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        console.log("In init function ...");
         reset();
         lastTime = Date.now();
         main();
@@ -184,7 +180,6 @@ var Engine = (function(global) {
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
-    console.log("Calling Resources.load in engine.js.");
     Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
