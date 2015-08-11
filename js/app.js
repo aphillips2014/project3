@@ -119,7 +119,7 @@ Player.prototype.update = function(dt) {
 
       if ((this.y < 52) || (this.y === 52)) {
           score += 10;
-          player.reset("Congratulations you made it to the WATER!!");
+          this.reset("Congratulations you made it to the WATER!!");
       }
 
 
@@ -195,8 +195,8 @@ Player.prototype.handleInput = function(keyCode) {
 Player.prototype.reset = function(message){
 
       //position player in grass and center player
-      player.y = 480;//position player in grass
-      player.x = 430/2 - 10;
+      this.y = 480;//position player in grass
+      this.x = 430/2 - 10;
       enemy1.x = -280;
       enemy2.x = -280;
       enemy3.x = -280;
@@ -291,7 +291,7 @@ function sleep(milliseconds) {
 // Instantiate 4 global enemy objects accessible via window object
 // Place all enemy objects in an global array called allEnemies accessible via window object
 // Place the player object in a variable called player
-      var msgStat, msgScore
+      var msgStat, msgScore;
       var score = 0;
       var player = new Player();
       var enemy1  = new Enemy('images/enemy-bug2.png',1,120,Enemy.prototype.getRand(15)*1.3, "Larry");
